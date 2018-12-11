@@ -3,21 +3,24 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import reverse
-from djangoforms.models import Tweet, Author
+from djangoforms.models import Tweet, Author, Notification
 from djangoforms.forms import AddTweet, SignupForm, LoginForm
 from datetime import datetime
+import re
+
+# TODOS
+# only show tweets from followed users
+# notifications go away once viewed
 
 
 @login_required()
 def all_tweets(request):
     html = 'all_tweets.html'
-    user = request.user
-    author = Author.objects.filter(author=user.id).first()
+    user = Author.objects.filter(user_id=request.user.id).first()
     tweets = Tweet.objects.order_by('-timestamp')
     return render(request, html, {'data': {
         'tweets': tweets,
         'user': user,
-        'author': author,
     }})
 
 
@@ -31,11 +34,13 @@ def author(request, author_id):
     tweets = Tweet.objects.filter(author=author).order_by('-timestamp')
     count = tweets.count()
     user = request.user
+    notifications = Notification.objects.filter(user_mentioned=author)
     return render(request, 'author.html', {'data': {
         'author': author,
         'tweets': tweets,
         'count': count,
         'user': user,
+        'notifications': notifications
     }})
 
 
@@ -52,6 +57,11 @@ def add_tweet(request):
                 author=Author.objects.filter(id=data['author']).first(),
                 timestamp=datetime.now()
             )
+            for mention in re.findall(r'@([^\n ]*)', data['body']):
+                Notification.objects.create(
+                    user_mentioned=Author.objects.filter(name=mention).first(),
+                    tweet=Tweet.objects.filter(body=data['body']).first(),
+                )
             return HttpResponseRedirect(reverse('homepage'))
     else:
         form = AddTweet(user=request.user)

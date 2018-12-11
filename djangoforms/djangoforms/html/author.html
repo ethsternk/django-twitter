@@ -11,11 +11,19 @@
     <p>{{ data.author.following.count }} following</p>
     <ul>
         {% for item in data.tweets %}
-        {{ item.body }}
-        <br>
-        by <a href="/author/{{ item.author.id }}">{{ item.author }}</a>
-        at <a href="/tweet/{{ item.id }}">{{ item.timestamp }}</a>
-        <br><br>
+            {{ item.body }}
+            <br>
+            by <a href="/author/{{ item.author.id }}">{{ item.author }}</a>
+            at <a href="/tweet/{{ item.id }}">{{ item.timestamp }}</a>
+            <br><br>
         {% endfor %}
     </ul>
+    {% if data.author.user_id == data.user.id %}
+        <h3>Notifications</h3>
+        {% for item in data.notifications %}
+            <ul>
+                <li><a href="/author/{{ item.tweet.author.id }}">{{ item.tweet.author.name }}</a> mentioned you: {{ item.tweet.body }}</li>
+            </ul>
+        {% endfor %}
+    {% endif %}
 </body>

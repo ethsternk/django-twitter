@@ -18,3 +18,11 @@ class Tweet(models.Model):
 
     def __str__(self):
         return self.id
+
+
+class Notification(models.Model):
+    user_mentioned = models.ForeignKey(Author, on_delete=models.CASCADE)
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id

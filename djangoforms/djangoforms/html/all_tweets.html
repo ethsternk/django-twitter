@@ -1,7 +1,7 @@
 <body>
     <h2>Shitty Twitter</h2>
-    {% if data.user.username %}
-    <p>You are logged in as <a href="/author/{{ data.author.id }}">{{ data.user.username }}</a>!</p>
+    {% if data.user.name %}
+    <p>You are logged in as <a href="/author/{{ data.user.id }}">{{ data.user.name }}</a>!</p>
     <p><a href="logout/">Logout</a></p>
     {% else %}
     <p><a href="login/">Log in</a></p>
