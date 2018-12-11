@@ -1,0 +1,21 @@
+<body>
+    <p><a href="/">go home</a> </p>
+    <h2>{{ data.author }}</h2>
+    <h3>{{ data.count }} tweets</h3>
+    {% if data.author.user_id == data.user.id %}
+        <p>That's you!</p>
+    {% else %}
+        <p><a href="/author/{{ data.author.id }}/follow">follow {{ data.author }}</a></p>
+        <p><a href="/author/{{ data.author.id }}/unfollow">unfollow {{ data.author }}</a></p>
+    {% endif %}
+    <p>{{ data.author.following.count }} following</p>
+    <ul>
+        {% for item in data.tweets %}
+        {{ item.body }}
+        <br>
+        by <a href="/author/{{ item.author.id }}">{{ item.author }}</a>
+        at <a href="/tweet/{{ item.id }}">{{ item.timestamp }}</a>
+        <br><br>
+        {% endfor %}
+    </ul>
+</body>

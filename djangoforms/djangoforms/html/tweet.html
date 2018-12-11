@@ -1,0 +1,7 @@
+<body>
+    <p><a href="/"><-- home</a></p>
+    {{ data.body }}
+    <br>
+    by <a href="/author/{{ item.author.id }}">{{ data.author }}</a>
+    at <a href="/tweet/{{ item.id }}">{{ data.timestamp }}</a>
+</body>

@@ -1,0 +1,20 @@
+<body>
+    <h2>Shitty Twitter</h2>
+    {% if data.user.username %}
+    <p>You are logged in as <a href="/author/{{ data.author.id }}">{{ data.user.username }}</a>!</p>
+    <p><a href="logout/">Logout</a></p>
+    {% else %}
+    <p><a href="login/">Log in</a></p>
+    <p><a href="signup/">Sign up</a></p>
+    {% endif %}
+    <p><a href="addtweet/">Add Tweet</a></p>
+    <ul>
+        {% for item in data.tweets %}
+        {{ item.body }}
+        <br>
+        by <a href="/author/{{ item.author.id }}">{{ item.author }}</a>
+        at <a href="/tweet/{{ item.id }}">{{ item.timestamp }}</a>
+        <br><br>
+        {% endfor %}
+    </ul>
+</body>
