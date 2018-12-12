@@ -1,3 +1,4 @@
 .vscode/
 .DS_Store
 djangoforms/djangoforms/__pycache__/
+djangoforms/djangoforms/migrations/__pycache__/

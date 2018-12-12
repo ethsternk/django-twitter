@@ -10,7 +10,6 @@ import re
 
 # TODOS
 # only show tweets from followed users
-# notifications go away once viewed
 
 
 @login_required()
@@ -35,6 +34,13 @@ def author(request, author_id):
     count = tweets.count()
     user = request.user
     notifications = Notification.objects.filter(user_mentioned=author)
+    if author.user.id == user.id:
+        for notif in Notification.objects.filter(user_mentioned=author):
+            if notif.seen:
+                notif.delete()
+            else:
+                notif.seen = True
+                notif.save()
     return render(request, 'author.html', {'data': {
         'author': author,
         'tweets': tweets,
@@ -69,10 +75,8 @@ def add_tweet(request):
 
 
 def signup_view(request):
-
     html = 'signup.html'
     form = SignupForm(None or request.POST)
-
     if form.is_valid():
         data = form.cleaned_data
         user = User.objects.create_user(
@@ -83,7 +87,6 @@ def signup_view(request):
         )
         login(request, user)
         return HttpResponseRedirect(reverse('homepage'))
-
     return render(request, html, {'form': form})
 
 
@@ -101,7 +104,6 @@ def login_view(request):
                 return HttpResponseRedirect(next)
             else:
                 return HttpResponseRedirect(reverse('homepage'))
-
     return render(request, html, {'form': form})
 
 
@@ -112,7 +114,6 @@ def logout_view(request):
 
 @login_required()
 def follow(request, author_id):
-    # author = Author.objects.filter(id=author_id).first()
     user = Author.objects.filter(user_id=request.user.id).first()
     user.following.add(author_id)
     print(user.following.all())

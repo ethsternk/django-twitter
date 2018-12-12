@@ -1,6 +1,5 @@
 from django import forms
 from djangoforms.models import Author
-import datetime
 
 
 class AddTweet(forms.Form):
