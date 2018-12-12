@@ -8,15 +8,13 @@ from djangoforms.forms import AddTweet, SignupForm, LoginForm
 from datetime import datetime
 import re
 
-# TODOS
-# only show tweets from followed users
-
 
 @login_required()
 def all_tweets(request):
     html = 'all_tweets.html'
     user = Author.objects.filter(user_id=request.user.id).first()
-    tweets = Tweet.objects.order_by('-timestamp')
+    tweets = Tweet.objects.filter(
+        author__in=user.following.all()).order_by('-timestamp')
     return render(request, html, {'data': {
         'tweets': tweets,
         'user': user,
@@ -81,11 +79,12 @@ def signup_view(request):
         data = form.cleaned_data
         user = User.objects.create_user(
             data['username'], data['email'], data['password'])
-        Author.objects.create(
+        author = Author.objects.create(
             name=user.username,
             user=user,
         )
         login(request, user)
+        author.following.add(author.id)
         return HttpResponseRedirect(reverse('homepage'))
     return render(request, html, {'form': form})
 
