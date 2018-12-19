@@ -115,7 +115,6 @@ def logout_view(request):
 def follow(request, author_id):
     user = Author.objects.filter(user_id=request.user.id).first()
     user.following.add(author_id)
-    print(user.following.all())
     return HttpResponseRedirect('/author/' + str(author_id))
 
 
@@ -123,5 +122,4 @@ def follow(request, author_id):
 def unfollow(request, author_id):
     user = Author.objects.filter(user_id=request.user.id).first()
     user.following.remove(author_id)
-    print(user.following.all())
     return HttpResponseRedirect('/author/' + str(author_id))
